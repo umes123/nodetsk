@@ -40,6 +40,20 @@ app.post('/posts', (req, res) => {
 });
 
 
+app.delete('/api/delete/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    res.json({ message: 'Data deleted successfully' });
+  });
+});
+
 app.get('/posts', (req, res) => {
   const sql = 'SELECT * FROM posts';
   db.query(sql, (err, results) => {
@@ -48,21 +62,7 @@ app.get('/posts', (req, res) => {
   });
 });
 
-app.delete('/posts/:id', (req, res) => {
-    const resourceId = req.params.id;
-  
 
-    const sql = `DELETE FROM mytable WHERE id = ?`; 
-    db.query(sql, [resourceId], (err, result) => {
-      if (err) {
-        console.error('Error deleting resource:', err);
-        res.status(500).json({ error: 'Error deleting resource' });
-        return;
-      }
-  
-      res.status(200).json({ message: 'Resource deleted successfully' });
-    });
-  });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
